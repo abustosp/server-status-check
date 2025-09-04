@@ -7,7 +7,7 @@ import subprocess
 
 dominios = os.getenv("DOMINIOS").split(";")
 receptores = os.getenv("RECEPTORES").split(";")
-timeout = os.getenv("TIMEOUT", 10)
+timeout = os.getenv("TIMEOUT", 60)
 
 failed_domains = []
 
