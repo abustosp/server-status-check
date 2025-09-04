@@ -7,6 +7,7 @@ import subprocess
 
 dominios = os.getenv("DOMINIOS").split(";")
 receptores = os.getenv("RECEPTORES").split(";")
+timeout = os.getenv("TIMEOUT", 10)
 
 failed_domains = []
 
@@ -16,7 +17,7 @@ for dominio in dominios:
             ["ping", "-c", "1", dominio],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            timeout=10
+            timeout=timeout
         )
         if result.returncode != 0:
             failed_domains.append(dominio)
