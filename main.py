@@ -1,9 +1,11 @@
 from utils.email import send_email, generate_mail_body
 import os
 import subprocess
-# import dotenv
-
-# dotenv.load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    print("python-dotenv no está instalado, no se cargarán las variables de entorno, salvo que se usen en el .env.")
 
 dominios = os.getenv("DOMINIOS").split(";")
 receptores = os.getenv("RECEPTORES").split(";")

@@ -4,9 +4,11 @@ import os
 import re
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-# import dotenv
-
-# dotenv.load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # Si no está dotenv, se asume que las variables de entorno ya están definidas
 
 def send_email(to_email: str, subject: str, body: str):
     message = MIMEMultipart()
