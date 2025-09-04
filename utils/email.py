@@ -4,9 +4,9 @@ import os
 import re
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import dotenv
+# import dotenv
 
-dotenv.load_dotenv()
+# dotenv.load_dotenv()
 
 def send_email(to_email: str, subject: str, body: str):
     message = MIMEMultipart()

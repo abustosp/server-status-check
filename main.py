@@ -1,9 +1,9 @@
 from utils.email import send_email, generate_mail_body
 import os
 import subprocess
-import dotenv
+# import dotenv
 
-dotenv.load_dotenv()
+# dotenv.load_dotenv()
 
 dominios = os.getenv("DOMINIOS").split(";")
 receptores = os.getenv("RECEPTORES").split(";")

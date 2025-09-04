@@ -1,0 +1,10 @@
+services:
+
+  server-status-check:
+    build: .
+    container_name: server-status-check
+    env_file:
+      - .env
+    volumes:
+      - ./utils/templates/:/app/utils/templates/
+    #command: python main.py
