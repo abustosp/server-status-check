@@ -8,3 +8,4 @@ services:
     volumes:
       - ./utils/templates/:/app/utils/templates/
     #command: python main.py
+    restart: on-failure
