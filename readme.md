@@ -1,99 +1,58 @@
 # Server Status Check
 
-Este proyecto permite **monitorear dominios/servicios** mediante pings periódicos y, en caso de detectar fallas, **enviar alertas por correo electrónico** con un template HTML personalizado.
+Script en Python para monitorear dominios con `ping` y enviar alertas por correo cuando alguno no responde.
 
-## 📂 Estructura del proyecto
+## Que hace
+- Lee dominios desde `DOMINIOS`.
+- Ejecuta `ping -c 1` por dominio con timeout configurable.
+- Si hay fallos, envia un correo HTML a los receptores.
 
+## Requisitos
+- Python 3.9+
+- Comando `ping` disponible en el sistema
+- Opcional: `python-dotenv` para cargar `.env`
+- Acceso a un servidor SMTP
+
+## Configuracion (variables de entorno)
+- `DOMINIOS`: dominios separados por `;`.
+- `TIMEOUT`: segundos de espera por ping (default: `60`).
+- `RECEPTORES`: correos separados por `;`.
+- `SMTP_SERVER`: host SMTP.
+- `SMTP_PORT`: puerto SMTP (ej. `587`).
+- `SMTP_USER`: usuario SMTP.
+- `SMTP_PASSWORD`: password SMTP.
+- `SMTP_FROM_EMAIL`: remitente.
+- `TEMPLATE_PATH`: ruta al HTML de la plantilla (ej. `./utils/templates/mail.html`).
+
+## Ejecutar en local
+1. `cp .env.example .env` y completa los valores.
+2. `python main.py`
+
+Si queres cargar `.env` automaticamente:
+```bash
+pip install python-dotenv
 ```
-.
-├── main.py              # Script principal: chequea dominios y dispara alertas
-├── utils/
-│   └── email.py         # Funciones para enviar correos y generar el cuerpo HTML
-├── mail.html            # Template HTML del correo de alerta
-├── Dockerfile           # Imagen base para contenerizar la app
-├── compose.yaml         # Definición de servicio en Docker Compose
-├── .env.example         # Variables de entorno de ejemplo
-├── .dockerignore        # Exclusiones para la imagen Docker
-├── .gitignore           # Exclusiones para Git
+
+## Ejecutar con Docker
+```bash
+docker compose up --build
 ```
 
-## ⚙️ Configuración
+`compose.yaml` carga `.env` y monta `./utils/templates` dentro del contenedor.
 
-El proyecto se basa en variables de entorno definidas en un archivo `.env`.  
-Ejemplo (`.env.example`):
+## Plantilla de correo
+- Archivo por defecto: `utils/templates/mail.html`
+- Placeholder requerido: `{{SERVICIOS}}`
 
-```ini
-# Configuración de dominios a monitorear (separados por ;)
+## Ejemplo de `.env`
+```env
 DOMINIOS=google.com;mrbot.com.ar;contadoresonline.com.ar
-
-# Lista de correos receptores (separados por ;)
+TIMEOUT=10
 RECEPTORES=destinatario1@mail.com;destinatario2@mail.com
-
-# Configuración SMTP
 SMTP_SERVER=smtp.tu-servidor.com
 SMTP_PORT=587
 SMTP_USER=usuario
 SMTP_PASSWORD=contraseña
 SMTP_FROM_EMAIL=alertas@tudominio.com
-
-# Ruta al template HTML del correo
-TEMPLATE_PATH=utils/templates/mail.html
+TEMPLATE_PATH=./utils/templates/mail.html
 ```
-
-⚠️ Recuerda **copiar `.env.example` a `.env`** y completar tus credenciales.
-
-## 🚀 Uso
-
-### 1. Ejecutar localmente
-
-Requisitos:
-- Python 3.9+
-- Librerías estándar (no requiere dependencias externas)
-
-Ejecutar:
-
-```bash
-python main.py
-```
-
-### 2. Usar con Docker
-
-Construir la imagen:
-
-```bash
-docker build -t server-status-check .
-```
-
-Levantar con Docker Compose:
-
-```bash
-docker compose up -d
-```
-
-El servicio definido en `compose.yaml` monta automáticamente el directorio de templates y carga variables desde `.env`.
-
-## 📧 Funcionamiento del envío de correos
-
-1. `main.py` hace ping a cada dominio listado en `DOMINIOS`.
-2. Si alguno falla, se genera un cuerpo HTML a partir de `mail.html`.
-3. El correo se envía a todos los receptores definidos en `RECEPTORES` mediante `SMTP_SERVER`.
-
-Ejemplo de alerta recibida:
-
-> **FALLA EN SERVICIOS (2)**  
-> Se detectaron fallas en los siguientes servicios:
-> - google.com  
-> - mrbot.com.ar  
-
-Con diseño HTML estilizado y logo embebido.
-
-## 📦 Extensiones posibles
-
-- Programar la ejecución periódica con **cron** o **supervisord**.
-- Agregar más validaciones (ej. HTTP status code).
-- Integrar con servicios de monitoreo externos.
-
----
-
-👨‍💻 Desarrollado por [Agustín Bustos Piasentini](https://www.linkedin.com/in/agust%C3%ADn-bustos-piasentini-468446122/)  
-🔗 Proyecto de ejemplo para monitoreo y alertas automáticas.
